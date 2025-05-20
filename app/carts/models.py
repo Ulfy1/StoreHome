@@ -18,7 +18,7 @@ class Cart(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='user')
     product = models.ForeignKey(to=Products, on_delete=models.CASCADE, verbose_name='Product')
     quantity = models.PositiveSmallIntegerField(default=0, verbose_name='Quantity')
-    session_key = models.CharField(max_length=12, null=True, blank=True)
+    session_key = models.CharField(max_length=32, null=True, blank=True)
     created_timestamp = models.DateField(auto_now_add=True, verbose_name='Created timestamp')
 
     class Meta:
@@ -32,4 +32,6 @@ class Cart(models.Model):
         return round(self.product.sell_price() * self.quantity, 2)
 
     def __str__(self):
-        return f'Cart {self.user.username} | Product {self.product.name} | Quantity {self.quantity }'
+        if self.user:
+            return f'Cart {self.user.username} | Product {self.product.name} | Quantity {self.quantity }'
+        return f'Anonymous Cart | Product {self.product.name} | Quantity {self.quantity }'
